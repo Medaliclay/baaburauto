@@ -11,7 +11,7 @@ const VEHICLES = [
     fuel: 'Diesel',
     transmission: 'Automatique',
     location: 'Djibouti-Ville',
-    img: null,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/2021_Toyota_Land_Cruiser_300_3.4_ZX_%28Colombia%29_front_view_04.png/330px-2021_Toyota_Land_Cruiser_300_3.4_ZX_%28Colombia%29_front_view_04.png',
     badge: 'Populaire',
     badgeColor: 'bg-amber-500',
   },
@@ -24,7 +24,7 @@ const VEHICLES = [
     fuel: 'Essence',
     transmission: 'Automatique',
     location: 'Balbala',
-    img: null,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/2016_Nissan_Patrol_%28Y62%29_Ti-L_wagon_%282018-09-17%29_01.jpg/330px-2016_Nissan_Patrol_%28Y62%29_Ti-L_wagon_%282018-09-17%29_01.jpg',
     badge: 'Récent',
     badgeColor: 'bg-blue-500',
   },
@@ -37,7 +37,7 @@ const VEHICLES = [
     fuel: 'Diesel',
     transmission: 'Manuelle',
     location: 'Djibouti-Ville',
-    img: null,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/2016_Toyota_HiLux_Invincible_D-4D_4WD_2.4_Front.jpg/330px-2016_Toyota_HiLux_Invincible_D-4D_4WD_2.4_Front.jpg',
     badge: 'Disponible',
     badgeColor: 'bg-green-500',
   },
@@ -50,7 +50,7 @@ const VEHICLES = [
     fuel: 'Essence',
     transmission: 'Automatique',
     location: 'Djibouti-Ville',
-    img: null,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/2022_Hyundai_Tucson_Preferred%2C_Front_Right%2C_05-24-2021.jpg/330px-2022_Hyundai_Tucson_Preferred%2C_Front_Right%2C_05-24-2021.jpg',
     badge: null,
     badgeColor: '',
   },
@@ -63,7 +63,7 @@ const VEHICLES = [
     fuel: 'Diesel',
     transmission: 'Manuelle',
     location: 'PK12',
-    img: null,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Mitsubishi_Triton_LC_2.4_GLS_2WD_Blade_Silver_Metallic_%28cropped%29.jpg/330px-Mitsubishi_Triton_LC_2.4_GLS_2WD_Blade_Silver_Metallic_%28cropped%29.jpg',
     badge: 'Disponible',
     badgeColor: 'bg-green-500',
   },
@@ -76,7 +76,7 @@ const VEHICLES = [
     fuel: 'Essence',
     transmission: 'Automatique',
     location: 'Djibouti-Ville',
-    img: null,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/2025_Kia_Sportage_S_front_only.jpg/330px-2025_Kia_Sportage_S_front_only.jpg',
     badge: 'Nouveau',
     badgeColor: 'bg-purple-500',
   },
@@ -98,12 +98,19 @@ function VehicleCard({ vehicle }) {
 
   return (
     <div className="reveal card-hover bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
-      {/* Image placeholder */}
-      <div className="relative h-44 bg-gradient-to-br from-navy-800 to-navy-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-5xl mb-1">🚗</div>
-          <div className="text-white/40 text-xs">Photo bientôt disponible</div>
-        </div>
+      {/* Image */}
+      <div className="relative h-44 bg-gradient-to-br from-navy-800 to-navy-900 overflow-hidden">
+        {vehicle.img ? (
+          <img
+            src={vehicle.img}
+            alt={`${vehicle.brand} ${vehicle.model}`}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-5xl">🚗</div>
+          </div>
+        )}
         {vehicle.badge && (
           <span className={`absolute top-3 left-3 ${vehicle.badgeColor} text-white text-xs font-bold px-2.5 py-1 rounded-full`}>
             {vehicle.badge}
