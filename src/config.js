@@ -24,7 +24,7 @@ export const CONTACT_CONFIG = {
   // WhatsApp (format international sans + ni espaces)
   // Exemple : '25377123456'
   // ----------------------------------------------------------
-  whatsappNumber: '25377000000',
+  whatsappNumber: '25377112527',
 
   // ----------------------------------------------------------
   // Email de réception des demandes
@@ -34,7 +34,7 @@ export const CONTACT_CONFIG = {
   // ----------------------------------------------------------
   // Numéro de téléphone (affiché sur le site)
   // ----------------------------------------------------------
-  phone: '+253 77 00 00 00',
+  phone: '+253 77 11 25 27',
 
   // ----------------------------------------------------------
   // Adresse affichée dans la section contact
