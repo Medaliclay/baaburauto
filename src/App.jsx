@@ -32,7 +32,7 @@ function App() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#06111f]">
+    <div className="min-h-screen" style={{ background: '#000' }}>
       <Navbar />
       <main>
         <Hero />

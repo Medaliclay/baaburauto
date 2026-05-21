@@ -1,122 +1,115 @@
-import { ChevronDown, Wrench, AlertTriangle, Car, Sparkles, Building2, ShieldCheck, Zap, MapPin, Clock } from 'lucide-react'
-
-const SERVICE_CHIPS = [
-  { icon: Car, label: 'Location / Achat', href: '#location-achat', color: 'text-blue-400', border: 'border-blue-500/30 hover:border-blue-400/60' },
-  { icon: Wrench, label: 'Pièces détachées', href: '#pieces', color: 'text-amber-400', border: 'border-amber-500/30 hover:border-amber-400/60' },
-  { icon: AlertTriangle, label: 'Urgence', href: '#urgence', color: 'text-red-400', border: 'border-red-500/30 hover:border-red-400/60' },
-  { icon: Sparkles, label: 'Nettoyage', href: '#nettoyage', color: 'text-teal-400', border: 'border-teal-500/30 hover:border-teal-400/60' },
-  { icon: Building2, label: 'Ateliers', href: '#ateliers', color: 'text-purple-400', border: 'border-purple-500/30 hover:border-purple-400/60' },
-]
+import { ArrowRight, AlertTriangle } from 'lucide-react'
 
 const STATS = [
-  { icon: Clock, value: '24h', label: 'Urgences' },
-  { icon: ShieldCheck, value: '100%', label: 'Vérifié' },
-  { icon: Zap, value: '5+', label: 'Services' },
-  { icon: MapPin, value: 'DJI', label: 'Local' },
+  { value: '5', label: 'Services' },
+  { value: '24H', label: 'Urgences' },
+  { value: '100%', label: 'Vérifié' },
+  { value: 'DJI', label: 'Local' },
 ]
 
 export default function Hero() {
-  const scrollTo = (href) => document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+  const go = (href) => document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
 
   return (
-    <section
-      id="accueil"
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-grid"
-      style={{ background: 'radial-gradient(ellipse at 60% 0%, rgba(245,158,11,0.07) 0%, transparent 55%), radial-gradient(ellipse at 10% 80%, rgba(59,130,246,0.05) 0%, transparent 50%), #06111f' }}
-    >
-      {/* Ambient glow */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full pointer-events-none glow-pulse"
-        style={{ background: 'radial-gradient(ellipse, rgba(245,158,11,0.09) 0%, transparent 70%)', filter: 'blur(40px)' }}
-      />
+    <section id="accueil" style={{
+      minHeight: '100vh', display: 'flex', flexDirection: 'column',
+      justifyContent: 'center', alignItems: 'center',
+      background: '#000',
+      position: 'relative', overflow: 'hidden',
+      paddingTop: 80,
+    }}>
+      {/* Subtle grid */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        backgroundImage: 'linear-gradient(#0084FF08 1px, transparent 1px), linear-gradient(90deg, #0084FF08 1px, transparent 1px)',
+        backgroundSize: '80px 80px',
+      }} />
 
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 pt-28 pb-24 text-center">
+      {/* Blue accent line top */}
+      <div style={{
+        position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
+        width: 1, height: '30vh', background: 'linear-gradient(#0084FF, transparent)',
+        pointerEvents: 'none',
+      }} />
 
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2.5 border border-amber-500/25 text-amber-400 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-8 badge-pulse"
-          style={{ background: 'rgba(245,158,11,0.08)' }}>
-          <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse" />
-          Plateforme auto locale — Djibouti
+      <div style={{
+        position: 'relative', zIndex: 1,
+        maxWidth: 900, width: '100%',
+        margin: '0 auto', padding: '0 24px',
+        textAlign: 'center',
+      }}>
+        {/* Top label */}
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: 12,
+          marginBottom: 48,
+        }}>
+          <div style={{ width: 32, height: 1, background: '#0084FF' }} />
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#0084FF' }}>
+            Baabur Auto · Djibouti
+          </span>
+          <div style={{ width: 32, height: 1, background: '#0084FF' }} />
         </div>
 
         {/* Heading */}
-        <h1 className="font-display font-black text-white leading-[1.05] tracking-tight mb-6"
-          style={{ fontSize: 'clamp(2.4rem, 7vw, 4.5rem)' }}>
-          Tous les services auto
-          <br />
-          à Djibouti,{' '}
-          <span className="gradient-text">au même endroit.</span>
+        <h1 style={{
+          fontFamily: 'Sora', fontWeight: 900, color: '#fff',
+          fontSize: 'clamp(2.6rem, 8vw, 5.5rem)',
+          lineHeight: 1.0, letterSpacing: '-0.03em',
+          marginBottom: 24,
+        }}>
+          Services Auto<br />
+          <span style={{ color: '#0084FF' }}>à Djibouti.</span>
         </h1>
 
-        {/* Subtext */}
-        <p className="text-slate-400 leading-relaxed max-w-2xl mx-auto mb-10 text-base sm:text-lg">
-          Location, achat, pièces détachées, dépannage, nettoyage et ateliers partenaires
-          —{' '}
-          <span className="text-amber-400 font-semibold">une demande simple, une réponse rapide.</span>
+        {/* Sub */}
+        <p style={{ color: '#555', fontSize: 16, lineHeight: 1.7, maxWidth: 520, margin: '0 auto 40px', fontWeight: 500 }}>
+          Location · Achat · Pièces détachées · Dépannage
+          <br />Nettoyage · Ateliers partenaires
         </p>
 
         {/* CTAs */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-14">
-          <button
-            onClick={() => scrollTo('#pieces')}
-            className="btn-primary w-full sm:w-auto px-8 py-4 text-base"
-          >
-            <Wrench className="w-5 h-5" />
-            Demander une pièce
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginBottom: 72 }}>
+          <button onClick={() => go('#services')} className="btn-primary" style={{ fontSize: 13, padding: '14px 32px' }}>
+            Explorer les services
+            <ArrowRight style={{ width: 15, height: 15 }} />
           </button>
-          <button
-            onClick={() => scrollTo('#urgence')}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 text-white font-bold px-8 py-4 rounded-xl transition-all duration-200 active:scale-95 text-base border border-red-500/40 hover:border-red-400/70"
-            style={{ background: 'rgba(239,68,68,0.12)', boxShadow: '0 4px 20px rgba(239,68,68,0.2)' }}
+          <button onClick={() => go('#urgence')}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              background: 'transparent', border: '1px solid #FF3B3B',
+              color: '#FF3B3B', fontWeight: 700, fontSize: 13,
+              letterSpacing: '0.06em', textTransform: 'uppercase',
+              padding: '13px 28px', borderRadius: 2, cursor: 'pointer',
+              transition: 'background 0.15s',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,59,59,0.1)'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
           >
-            <span className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
+            <span className="blink" style={{ width: 6, height: 6, borderRadius: '50%', background: '#FF3B3B', flexShrink: 0 }} />
             Urgence
           </button>
-          <button
-            onClick={() => scrollTo('#services')}
-            className="btn-outline w-full sm:w-auto px-8 py-4 text-base"
-          >
-            Voir les services
-          </button>
         </div>
 
-        {/* Service chips */}
-        <div className="flex items-center justify-center gap-2 flex-wrap mb-16">
-          {SERVICE_CHIPS.map(({ icon: Icon, label, href, color, border }) => (
-            <button
-              key={href}
-              onClick={() => scrollTo(href)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all duration-200 active:scale-95 hover:bg-white/5 ${border}`}
-              style={{ background: 'rgba(255,255,255,0.03)' }}
-            >
-              <Icon className={`w-4 h-4 ${color}`} />
-              <span className="text-slate-300">{label}</span>
-            </button>
-          ))}
-        </div>
+        {/* Divider */}
+        <div style={{ width: '100%', height: 1, background: '#111', marginBottom: 40 }} />
 
         {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-xl mx-auto">
-          {STATS.map(({ icon: Icon, value, label }) => (
-            <div
-              key={label}
-              className="glass rounded-2xl px-4 py-4 text-center"
-            >
-              <div className="font-display font-black text-white text-2xl leading-none mb-1">{value}</div>
-              <div className="text-slate-500 text-xs font-semibold uppercase tracking-wider">{label}</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1 }}>
+          {STATS.map(({ value, label }, i) => (
+            <div key={label} style={{
+              padding: '20px 16px', textAlign: 'center',
+              borderRight: i < 3 ? '1px solid #111' : 'none',
+            }}>
+              <div style={{ fontFamily: 'Sora', fontWeight: 900, fontSize: 24, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1 }}>
+                {value}
+              </div>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#444', marginTop: 6 }}>
+                {label}
+              </div>
             </div>
           ))}
         </div>
       </div>
-
-      {/* Scroll indicator */}
-      <button
-        onClick={() => scrollTo('#services')}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-slate-600 hover:text-amber-400 transition-colors animate-bounce hidden sm:block"
-        aria-label="Défiler"
-      >
-        <ChevronDown className="w-6 h-6" />
-      </button>
     </section>
   )
 }

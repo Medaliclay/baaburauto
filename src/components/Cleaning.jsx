@@ -1,97 +1,75 @@
-import { Sparkles, Send } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { sendRequest } from '../config'
 
-const CLEANING_SERVICES = [
-  { title: 'Lavage simple', desc: 'Nettoyage extérieur rapide — carrosserie, vitres et jantes.', price: '1 500', currency: 'DJF', emoji: '🚿', duration: '30 min', popular: false },
-  { title: 'Nettoyage intérieur', desc: 'Aspiration, essuyage du tableau de bord, vitres intérieures.', price: '2 500', currency: 'DJF', emoji: '🪣', duration: '45 min', popular: false },
-  { title: 'Lavage complet', desc: 'Extérieur + intérieur — formule tout inclus.', price: '4 000', currency: 'DJF', emoji: '✨', duration: '1h30', popular: true },
-  { title: 'Detailing', desc: 'Nettoyage profond intérieur/extérieur avec produits spécialisés.', price: '12 000', currency: 'DJF', emoji: '💎', duration: '3–4h', popular: false },
-  { title: 'Polissage', desc: "Traitement de la carrosserie pour un éclat neuf.", price: '15 000', currency: 'DJF', emoji: '🪞', duration: '2–3h', popular: false },
-  { title: 'À domicile / bureau', desc: 'Nos équipes se déplacent à votre adresse sur rendez-vous.', price: 'Sur devis', currency: '', emoji: '🏠', duration: 'Sur RDV', popular: false },
+const SERVICES = [
+  { title: 'Lavage simple', desc: 'Carrosserie, vitres et jantes.', price: '1 500', currency: 'DJF', duration: '30 min', emoji: '🚿' },
+  { title: 'Nettoyage intérieur', desc: 'Aspiration, tableau de bord, vitres intérieures.', price: '2 500', currency: 'DJF', duration: '45 min', emoji: '🪣' },
+  { title: 'Lavage complet', desc: 'Extérieur + intérieur — formule tout inclus.', price: '4 000', currency: 'DJF', duration: '1h30', emoji: '✨', popular: true },
+  { title: 'Detailing', desc: 'Nettoyage profond avec produits spécialisés.', price: '12 000', currency: 'DJF', duration: '3–4h', emoji: '💎' },
+  { title: 'Polissage', desc: 'Traitement carrosserie pour un éclat neuf.', price: '15 000', currency: 'DJF', duration: '2–3h', emoji: '🪞' },
+  { title: 'À domicile / bureau', desc: 'Déplacement à votre adresse sur rendez-vous.', price: 'Sur devis', currency: '', duration: 'Sur RDV', emoji: '🏠' },
 ]
 
 export default function Cleaning() {
-  const handleRequest = (service) => {
-    sendRequest(`Demande de nettoyage — ${service.title}`, {
-      'Service': service.title,
-      'Prix indicatif': service.price ? `${service.price} ${service.currency}` : 'Sur devis',
-      'Durée estimée': service.duration,
-    })
-  }
+  const req = (s) => sendRequest(`Demande nettoyage — ${s.title}`, {
+    'Service': s.title, 'Prix': s.price ? `${s.price} ${s.currency}` : 'Sur devis', 'Durée': s.duration,
+  })
 
   return (
-    <section id="nettoyage" className="py-24" style={{ background: '#08131e' }}>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-14 reveal">
+    <section id="nettoyage" style={{ background: '#000', padding: '100px 0', borderTop: '1px solid #111' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+        <div className="reveal" style={{ marginBottom: 64 }}>
           <span className="section-tag">Nettoyage automobile</span>
-          <h2 className="font-display font-black text-white text-3xl sm:text-4xl mb-3 tracking-tight">
+          <h2 style={{ fontFamily: 'Sora', fontWeight: 900, fontSize: 'clamp(2rem,4vw,3rem)', color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
             Redonnez de l'éclat à votre véhicule
           </h2>
-          <div className="section-divider" />
-          <p className="text-slate-400 text-base max-w-xl mx-auto">
-            Des prestations de nettoyage adaptées à tous les besoins,
-            proposées par nos partenaires à Djibouti.
+          <p style={{ color: '#555', fontSize: 14, marginTop: 12, maxWidth: 500 }}>
+            Prestations de nettoyage pour tous les besoins — proposées par nos partenaires à Djibouti.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {CLEANING_SERVICES.map((service, i) => (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1 }} className="clean-grid">
+          <style>{`@media(max-width:767px){.clean-grid{grid-template-columns:1fr!important}}@media(min-width:768px) and (max-width:1023px){.clean-grid{grid-template-columns:repeat(2,1fr)!important}}`}</style>
+
+          {SERVICES.map((s, i) => (
             <div
-              key={service.title}
-              className="reveal card-hover relative rounded-2xl p-6 flex flex-col"
+              key={s.title}
+              className="reveal card-hover"
               style={{
-                background: service.popular ? 'rgba(245,158,11,0.06)' : 'rgba(255,255,255,0.03)',
-                border: service.popular ? '1px solid rgba(245,158,11,0.25)' : '1px solid rgba(255,255,255,0.07)',
-                transitionDelay: `${i * 65}ms`,
+                background: '#060606', padding: '28px 24px',
+                border: '1px solid #1A1A1A',
+                borderTop: s.popular ? '2px solid #0084FF' : '1px solid #1A1A1A',
+                cursor: 'pointer', position: 'relative',
+                transitionDelay: `${i * 55}ms`,
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = '#0A0A0A'; e.currentTarget.style.borderColor = '#2A2A2A' }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = '#060606'; e.currentTarget.style.borderColor = '#1A1A1A' }}
             >
-              {service.popular && (
-                <div
-                  className="absolute -top-3 left-1/2 -translate-x-1/2 text-black text-xs font-black px-4 py-1.5 rounded-full whitespace-nowrap"
-                  style={{ background: 'linear-gradient(135deg, #f59e0b, #fbbf24)', boxShadow: '0 4px 12px rgba(245,158,11,0.4)' }}
-                >
-                  ⭐ Le plus demandé
+              {s.popular && (
+                <div style={{ position: 'absolute', top: 16, right: 16, fontSize: 9, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#0084FF', background: '#0084FF14', padding: '4px 8px', borderRadius: 1 }}>
+                  LE PLUS DEMANDÉ
                 </div>
               )}
 
-              <div className="text-4xl mb-4 mt-2">{service.emoji}</div>
-              <h3 className="font-display font-bold text-white text-lg mb-2">{service.title}</h3>
-              <p className="text-slate-500 text-sm leading-relaxed mb-5 flex-1">{service.desc}</p>
+              <div style={{ fontSize: 32, marginBottom: 20 }}>{s.emoji}</div>
+              <h3 style={{ fontFamily: 'Sora', fontWeight: 800, fontSize: 16, color: '#fff', letterSpacing: '-0.01em', marginBottom: 8 }}>{s.title}</h3>
+              <p style={{ color: '#555', fontSize: 13, lineHeight: 1.6, marginBottom: 20 }}>{s.desc}</p>
 
-              <div
-                className="flex items-center justify-between py-3 mb-4 border-y"
-                style={{ borderColor: 'rgba(255,255,255,0.06)' }}
-              >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 16, borderTop: '1px solid #111', marginBottom: 20 }}>
                 <div>
-                  <div className="text-slate-600 text-xs uppercase tracking-wider font-bold mb-0.5">Prix</div>
-                  <div className="font-display font-black text-white text-lg leading-none">
-                    {service.price === 'Sur devis' ? (
-                      <span className="text-teal-400 text-base">Sur devis</span>
-                    ) : (
-                      <>
-                        {service.price}{' '}
-                        <span className="text-teal-400 text-xs font-bold">{service.currency}</span>
-                      </>
-                    )}
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#333', marginBottom: 3 }}>Prix</div>
+                  <div style={{ fontFamily: 'Sora', fontWeight: 900, fontSize: 15, color: '#fff' }}>
+                    {s.price === 'Sur devis' ? <span style={{ color: '#0084FF' }}>Sur devis</span> : <>{s.price} <span style={{ color: '#0084FF', fontSize: 10 }}>{s.currency}</span></>}
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-slate-600 text-xs uppercase tracking-wider font-bold mb-0.5">Durée</div>
-                  <div className="text-slate-300 font-bold text-sm">{service.duration}</div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#333', marginBottom: 3 }}>Durée</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#666' }}>{s.duration}</div>
                 </div>
               </div>
 
-              <button
-                onClick={() => handleRequest(service)}
-                className="w-full flex items-center justify-center gap-2 font-bold text-sm py-2.5 rounded-xl transition-all duration-200 active:scale-95 border"
-                style={{
-                  background: service.popular ? 'rgba(245,158,11,0.12)' : 'rgba(20,184,166,0.08)',
-                  borderColor: service.popular ? 'rgba(245,158,11,0.3)' : 'rgba(20,184,166,0.2)',
-                  color: service.popular ? '#fbbf24' : '#2dd4bf',
-                }}
-              >
-                <Sparkles className="w-4 h-4" />
-                Faire une demande
+              <button onClick={() => req(s)} className="btn-outline" style={{ width: '100%', justifyContent: 'center', fontSize: 11, padding: '10px' }}>
+                Faire une demande <ArrowRight style={{ width: 12, height: 12 }} />
               </button>
             </div>
           ))}

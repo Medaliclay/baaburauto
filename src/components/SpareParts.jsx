@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Wrench, CheckCircle, Send, Loader } from 'lucide-react'
+import { Wrench, CheckCircle, ArrowRight, Loader } from 'lucide-react'
 import { sendRequest } from '../config'
 
 const INITIAL = { name: '', phone: '', brand: '', model: '', year: '', part: '', quality: '', urgency: '', notes: '' }
@@ -12,8 +12,8 @@ export default function SpareParts() {
 
   const validate = () => {
     const e = {}
-    if (!form.name.trim()) e.name = 'Champ obligatoire'
-    if (!form.phone.trim()) e.phone = 'Champ obligatoire'
+    if (!form.name.trim()) e.name = 'Requis'
+    if (!form.phone.trim()) e.phone = 'Requis'
     if (!form.part.trim()) e.part = 'Décrivez la pièce recherchée'
     return e
   }
@@ -26,146 +26,107 @@ export default function SpareParts() {
   const handleSubmit = (e) => {
     e.preventDefault()
     const errs = validate()
-    if (Object.keys(errs).length > 0) { setErrors(errs); return }
+    if (Object.keys(errs).length) { setErrors(errs); return }
     setLoading(true)
     setTimeout(() => {
       sendRequest('Demande de pièce détachée', {
         'Nom': form.name, 'Téléphone': form.phone,
-        'Marque du véhicule': form.brand, 'Modèle': form.model, 'Année': form.year,
-        'Pièce recherchée': form.part, 'Préférence qualité': form.quality,
-        'Urgence': form.urgency, 'Notes': form.notes,
+        'Marque': form.brand, 'Modèle': form.model, 'Année': form.year,
+        'Pièce recherchée': form.part, 'Qualité': form.quality, 'Délai': form.urgency, 'Notes': form.notes,
       })
-      setLoading(false)
-      setSent(true)
+      setLoading(false); setSent(true)
     }, 800)
   }
 
+  const labelStyle = { fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#444', display: 'block', marginBottom: 6 }
+  const errStyle = { fontSize: 11, color: '#FF3B3B', marginTop: 4 }
+
   return (
-    <section id="pieces" className="py-24" style={{ background: '#08131e' }}>
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-12 reveal">
+    <section id="pieces" style={{ background: '#000', padding: '100px 0', borderTop: '1px solid #111' }}>
+      <div style={{ maxWidth: 760, margin: '0 auto', padding: '0 24px' }}>
+        <div className="reveal" style={{ marginBottom: 56 }}>
           <span className="section-tag">Pièces détachées</span>
-          <h2 className="font-display font-black text-white text-3xl sm:text-4xl mb-3 tracking-tight">
+          <h2 style={{ fontFamily: 'Sora', fontWeight: 900, fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
             Trouver une pièce
           </h2>
-          <div className="section-divider" />
-          <p className="text-slate-400 text-base max-w-xl mx-auto">
-            Décrivez la pièce dont vous avez besoin. Notre équipe vérifie la disponibilité
-            auprès de nos fournisseurs et vous répond rapidement.
+          <p style={{ color: '#555', fontSize: 14, marginTop: 12 }}>
+            Décrivez la pièce. Notre équipe vérifie la disponibilité et vous répond rapidement.
           </p>
         </div>
 
         {sent ? (
-          <div
-            className="reveal rounded-2xl p-12 text-center toast"
-            style={{ background: 'rgba(34,197,94,0.07)', border: '1px solid rgba(34,197,94,0.2)' }}
-          >
-            <CheckCircle className="w-14 h-14 text-green-400 mx-auto mb-4" />
-            <h3 className="font-display font-bold text-white text-xl mb-2">Demande envoyée !</h3>
-            <p className="text-slate-400 text-sm mb-6 max-w-sm mx-auto">
-              Notre équipe reviendra vers vous rapidement pour vous proposer les options disponibles.
-            </p>
-            <button onClick={() => { setSent(false); setForm(INITIAL) }} className="btn-primary">
-              Nouvelle demande
-            </button>
+          <div className="reveal toast" style={{ background: '#080808', border: '1px solid #111', borderTop: '2px solid #22c55e', padding: '60px 40px', textAlign: 'center' }}>
+            <CheckCircle style={{ width: 40, height: 40, color: '#22c55e', margin: '0 auto 16px' }} />
+            <h3 style={{ fontFamily: 'Sora', fontWeight: 800, fontSize: 20, color: '#fff', marginBottom: 8 }}>Demande envoyée</h3>
+            <p style={{ color: '#555', fontSize: 13, marginBottom: 24 }}>Notre équipe reviendra vers vous rapidement.</p>
+            <button onClick={() => { setSent(false); setForm(INITIAL) }} className="btn-primary">Nouvelle demande</button>
           </div>
         ) : (
-          <form
-            onSubmit={handleSubmit}
-            className="reveal rounded-2xl p-6 md:p-8"
-            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
-          >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="form-label">Nom complet <span className="text-red-400">*</span></label>
-                <input name="name" value={form.name} onChange={handleChange}
-                  className={`form-input ${errors.name ? '!border-red-500/60' : ''}`}
-                  placeholder="Votre nom" />
-                {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
-              </div>
-              <div>
-                <label className="form-label">Téléphone <span className="text-red-400">*</span></label>
-                <input name="phone" type="tel" value={form.phone} onChange={handleChange}
-                  className={`form-input ${errors.phone ? '!border-red-500/60' : ''}`}
-                  placeholder="+253 77 …" />
-                {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone}</p>}
-              </div>
-            </div>
-
-            <div
-              className="rounded-xl p-4 mb-4"
-              style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.15)' }}
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <Wrench className="w-4 h-4 text-amber-400" />
-                <span className="text-xs font-bold text-amber-400/80 uppercase tracking-wider">
-                  Informations sur le véhicule
-                </span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <form onSubmit={handleSubmit} className="reveal" style={{ background: '#080808', border: '1px solid #1A1A1A' }}>
+            <div style={{ padding: '32px 32px 0' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }} className="form-2col">
+                <style>{`@media(max-width:600px){.form-2col{grid-template-columns:1fr!important}.form-3col{grid-template-columns:1fr!important}}`}</style>
                 <div>
-                  <label className="form-label">Marque</label>
-                  <input name="brand" value={form.brand} onChange={handleChange}
-                    className="form-input" placeholder="Toyota, Nissan…" />
+                  <label style={labelStyle}>Nom complet *</label>
+                  <input name="name" value={form.name} onChange={handleChange} className="form-input" placeholder="Votre nom" style={errors.name ? { borderColor: '#FF3B3B' } : {}} />
+                  {errors.name && <div style={errStyle}>{errors.name}</div>}
                 </div>
                 <div>
-                  <label className="form-label">Modèle</label>
-                  <input name="model" value={form.model} onChange={handleChange}
-                    className="form-input" placeholder="Land Cruiser…" />
+                  <label style={labelStyle}>Téléphone *</label>
+                  <input name="phone" type="tel" value={form.phone} onChange={handleChange} className="form-input" placeholder="+253 77 …" style={errors.phone ? { borderColor: '#FF3B3B' } : {}} />
+                  {errors.phone && <div style={errStyle}>{errors.phone}</div>}
+                </div>
+              </div>
+
+              {/* Vehicle block */}
+              <div style={{ background: '#050505', border: '1px solid #1A1A1A', borderLeft: '2px solid #0084FF', padding: '20px', marginBottom: 20 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                  <Wrench style={{ width: 13, height: 13, color: '#0084FF' }} />
+                  <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#0084FF' }}>Véhicule</span>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 80px', gap: 12 }} className="form-3col">
+                  <div><label style={labelStyle}>Marque</label><input name="brand" value={form.brand} onChange={handleChange} className="form-input" placeholder="Toyota…" /></div>
+                  <div><label style={labelStyle}>Modèle</label><input name="model" value={form.model} onChange={handleChange} className="form-input" placeholder="Land Cruiser…" /></div>
+                  <div><label style={labelStyle}>Année</label><input name="year" value={form.year} onChange={handleChange} className="form-input" placeholder="2018" maxLength={4} /></div>
+                </div>
+              </div>
+
+              <div style={{ marginBottom: 20 }}>
+                <label style={labelStyle}>Pièce recherchée *</label>
+                <input name="part" value={form.part} onChange={handleChange} className="form-input" placeholder="Ex : filtre à huile, plaquettes de frein, alternateur…" style={errors.part ? { borderColor: '#FF3B3B' } : {}} />
+                {errors.part && <div style={errStyle}>{errors.part}</div>}
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }} className="form-2col">
+                <div>
+                  <label style={labelStyle}>Qualité</label>
+                  <select name="quality" value={form.quality} onChange={handleChange} className="form-input">
+                    <option value="">Sélectionner…</option>
+                    <option>Neuve</option><option>Occasion</option>
+                    <option>Originale (OEM)</option><option>Adaptable</option>
+                  </select>
                 </div>
                 <div>
-                  <label className="form-label">Année</label>
-                  <input name="year" value={form.year} onChange={handleChange}
-                    className="form-input" placeholder="2018" maxLength={4} />
+                  <label style={labelStyle}>Délai</label>
+                  <select name="urgency" value={form.urgency} onChange={handleChange} className="form-input">
+                    <option value="">Sélectionner…</option>
+                    <option>Aujourd'hui</option><option>Cette semaine</option><option>Flexible</option>
+                  </select>
                 </div>
               </div>
-            </div>
 
-            <div className="mb-4">
-              <label className="form-label">Pièce recherchée <span className="text-red-400">*</span></label>
-              <input name="part" value={form.part} onChange={handleChange}
-                className={`form-input ${errors.part ? '!border-red-500/60' : ''}`}
-                placeholder="Ex : filtre à huile, plaquettes de frein, alternateur…" />
-              {errors.part && <p className="text-red-400 text-xs mt-1">{errors.part}</p>}
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="form-label">Préférence qualité</label>
-                <select name="quality" value={form.quality} onChange={handleChange} className="form-input">
-                  <option value="">Sélectionner…</option>
-                  <option value="Neuve">Neuve</option>
-                  <option value="Occasion">Occasion</option>
-                  <option value="Originale">Originale (OEM)</option>
-                  <option value="Adaptable">Adaptable</option>
-                </select>
-              </div>
-              <div>
-                <label className="form-label">Délai souhaité</label>
-                <select name="urgency" value={form.urgency} onChange={handleChange} className="form-input">
-                  <option value="">Sélectionner…</option>
-                  <option value="Aujourd'hui">Aujourd'hui</option>
-                  <option value="Cette semaine">Cette semaine</option>
-                  <option value="Flexible">Flexible</option>
-                </select>
+              <div style={{ marginBottom: 28 }}>
+                <label style={labelStyle}>Notes</label>
+                <textarea name="notes" value={form.notes} onChange={handleChange} rows={3} className="form-input" style={{ resize: 'none' }} placeholder="Code OEM, symptôme, informations complémentaires…" />
               </div>
             </div>
 
-            <div className="mb-6">
-              <label className="form-label">Notes supplémentaires</label>
-              <textarea name="notes" value={form.notes} onChange={handleChange} rows={3}
-                className="form-input resize-none"
-                placeholder="Code OEM, symptôme de panne, informations complémentaires…" />
+            <div style={{ borderTop: '1px solid #111', padding: '20px 32px' }}>
+              <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '15px', fontSize: 13, opacity: loading ? 0.6 : 1 }}>
+                {loading ? <><Loader style={{ width: 16, height: 16, animation: 'spin 1s linear infinite' }} />Envoi…</> : <>Envoyer la demande<ArrowRight style={{ width: 15, height: 15 }} /></>}
+              </button>
+              <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
             </div>
-
-            <button type="submit" disabled={loading}
-              className="btn-primary w-full justify-center py-4 text-base disabled:opacity-60 disabled:cursor-not-allowed">
-              {loading ? (
-                <><Loader className="w-5 h-5 animate-spin" />Envoi en cours…</>
-              ) : (
-                <><Send className="w-5 h-5" />Envoyer la demande</>
-              )}
-            </button>
           </form>
         )}
       </div>
