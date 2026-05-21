@@ -1,58 +1,68 @@
-import { ArrowRight } from 'lucide-react'
+import { Wrench } from 'lucide-react'
 import { sendRequest } from '../config'
 
-const SERVICES = [
-  { title: 'Vidange', emoji: '🛢️', desc: "Huile moteur + filtre selon préconisations constructeur." },
-  { title: 'Diagnostic', emoji: '🔍', desc: "Lecture codes défauts, diagnostic électronique complet." },
-  { title: 'Freins', emoji: '🛞', desc: "Plaquettes, disques, liquide de frein." },
+const WORKSHOP_SERVICES = [
+  { title: 'Vidange', emoji: '🛢️', desc: "Vidange huile moteur + filtre selon préconisations constructeur." },
+  { title: 'Diagnostic', emoji: '🔍', desc: "Lecture des codes défauts et diagnostic électronique complet." },
+  { title: 'Freins', emoji: '🛞', desc: "Remplacement plaquettes, disques, liquide de frein." },
   { title: 'Climatisation', emoji: '❄️', desc: "Recharge gaz, nettoyage circuit, vérification compresseur." },
-  { title: 'Batterie', emoji: '🔋', desc: "Test, remplacement, installation batterie adaptée." },
-  { title: 'Pneus', emoji: '⚙️', desc: "Montage, équilibrage, permutation, pression." },
-  { title: 'Suspension', emoji: '🔩', desc: "Amortisseurs, rotules, silent-blocs, trains roulants." },
-  { title: 'Électricité', emoji: '⚡', desc: "Alternateur, démarreur, câblage, diagnostic électrique." },
-  { title: 'Moteur', emoji: '🔧', desc: "Courroie distribution, joint culasse, réparation moteur." },
-  { title: 'Montage pièces', emoji: '🪛', desc: "Pose de pièces fournies par le client." },
-  { title: 'Inspection achat', emoji: '📋', desc: "Contrôle complet avant acquisition de véhicule." },
+  { title: 'Batterie', emoji: '🔋', desc: "Test, remplacement et installation de batterie adaptée." },
+  { title: 'Pneus', emoji: '⚙️', desc: "Montage, équilibrage, permutation et contrôle de pression." },
+  { title: 'Suspension', emoji: '🔩', desc: "Amortisseurs, rotules, silent-blocs et trains roulants." },
+  { title: 'Électricité auto', emoji: '⚡', desc: "Diagnostic électrique, alternateur, démarreur, câblage." },
+  { title: 'Moteur', emoji: '🔧', desc: "Réparation moteur, courroie de distribution, joint de culasse." },
+  { title: 'Montage de pièces', emoji: '🪛', desc: "Pose de pièces détachées fournies par le client." },
+  { title: "Inspection avant achat", emoji: '📋', desc: "Contrôle complet d'un véhicule avant acquisition." },
 ]
 
 export default function Workshop() {
-  const req = (s) => sendRequest(`Demande atelier — ${s.title}`, {
-    'Service': s.title, 'Description': s.desc,
-  })
+  const handleRequest = (service) => {
+    sendRequest(`Demande atelier — ${service.title}`, {
+      'Service demandé': service.title,
+      'Description': service.desc,
+    })
+  }
 
   return (
-    <section id="ateliers" style={{ background: '#030303', padding: '100px 0', borderTop: '1px solid #111' }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
-        <div className="reveal" style={{ marginBottom: 64 }}>
+    <section id="ateliers" className="py-24" style={{ background: '#060e1a' }}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-14 reveal">
           <span className="section-tag">Ateliers & Maintenance</span>
-          <h2 style={{ fontFamily: 'Sora', fontWeight: 900, fontSize: 'clamp(2rem,4vw,3rem)', color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
-            Entretien & réparation
+          <h2 className="font-display font-black text-white text-3xl sm:text-4xl mb-3 tracking-tight">
+            Services d'entretien & réparation
           </h2>
-          <p style={{ color: '#555', fontSize: 14, marginTop: 12, maxWidth: 500 }}>
-            Ateliers partenaires qualifiés pour tous vos besoins de maintenance à Djibouti.
+          <div className="section-divider" />
+          <p className="text-slate-400 text-base max-w-xl mx-auto">
+            Accédez à des ateliers partenaires qualifiés pour tous vos besoins
+            de maintenance et de réparation à Djibouti.
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1 }} className="wk-grid">
-          <style>{`@media(max-width:600px){.wk-grid{grid-template-columns:1fr!important}}@media(min-width:601px) and (max-width:900px){.wk-grid{grid-template-columns:repeat(2,1fr)!important}}@media(min-width:901px) and (max-width:1100px){.wk-grid{grid-template-columns:repeat(3,1fr)!important}}`}</style>
-
-          {SERVICES.map((s, i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+          {WORKSHOP_SERVICES.map((service, i) => (
             <div
-              key={s.title}
-              className="reveal card-hover"
-              style={{ background: '#060606', border: '1px solid #1A1A1A', padding: '24px 20px', cursor: 'pointer', transitionDelay: `${i * 40}ms`, display: 'flex', flexDirection: 'column' }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = '#0A0A0A'; e.currentTarget.style.borderColor = '#2A2A2A' }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = '#060606'; e.currentTarget.style.borderColor = '#1A1A1A' }}
+              key={service.title}
+              className="reveal card-hover rounded-2xl p-5 flex flex-col group"
+              style={{
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid rgba(255,255,255,0.07)',
+                transitionDelay: `${i * 45}ms`,
+              }}
             >
-              <div style={{ fontSize: 28, marginBottom: 14 }}>{s.emoji}</div>
-              <h3 style={{ fontFamily: 'Sora', fontWeight: 800, fontSize: 14, color: '#fff', letterSpacing: '-0.01em', marginBottom: 8 }}>{s.title}</h3>
-              <p style={{ color: '#444', fontSize: 12, lineHeight: 1.6, marginBottom: 16, flex: 1 }}>{s.desc}</p>
-              <button onClick={() => req(s)}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'none', border: 'none', color: '#0084FF', fontWeight: 700, fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', cursor: 'pointer', padding: 0 }}
-                onMouseEnter={(e) => e.currentTarget.style.color = '#4dabff'}
-                onMouseLeave={(e) => e.currentTarget.style.color = '#0084FF'}
+              <div className="text-3xl mb-3">{service.emoji}</div>
+              <h3 className="font-display font-bold text-white text-base mb-1.5">{service.title}</h3>
+              <p className="text-slate-500 text-xs leading-relaxed mb-4 flex-1">{service.desc}</p>
+              <button
+                onClick={() => handleRequest(service)}
+                className="w-full flex items-center justify-center gap-1.5 font-bold text-xs py-2 rounded-xl transition-all duration-200 active:scale-95 border"
+                style={{
+                  background: 'rgba(168,85,247,0.08)',
+                  borderColor: 'rgba(168,85,247,0.2)',
+                  color: '#c084fc',
+                }}
               >
-                Demander <ArrowRight style={{ width: 11, height: 11 }} />
+                <Wrench className="w-3.5 h-3.5" />
+                Demander ce service
               </button>
             </div>
           ))}

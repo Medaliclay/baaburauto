@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { AlertTriangle, CheckCircle, ArrowRight, Loader, Truck, Battery, Wind, Wrench, Fuel, Key, ShieldAlert, HelpCircle } from 'lucide-react'
+import { AlertTriangle, CheckCircle, Send, Loader, Truck, Battery, Wind, Wrench, Fuel, Key, ShieldAlert, HelpCircle } from 'lucide-react'
 import { sendRequest } from '../config'
 
-const TYPES = [
+const EMERGENCY_TYPES = [
   { id: 'remorquage', label: 'Remorquage', icon: Truck },
   { id: 'batterie', label: 'Batterie', icon: Battery },
   { id: 'pneu', label: 'Pneu crevé', icon: Wind },
@@ -10,7 +10,7 @@ const TYPES = [
   { id: 'carburant', label: 'Carburant', icon: Fuel },
   { id: 'cle', label: 'Clé bloquée', icon: Key },
   { id: 'accident', label: 'Accident', icon: ShieldAlert },
-  { id: 'autre', label: 'Autre', icon: HelpCircle },
+  { id: 'autre', label: 'Autre urgence', icon: HelpCircle },
 ]
 
 const INITIAL = { name: '', phone: '', type: '', location: '', vehicle: '', notes: '' }
@@ -23,9 +23,9 @@ export default function Emergency() {
 
   const validate = () => {
     const e = {}
-    if (!form.name.trim()) e.name = 'Requis'
-    if (!form.phone.trim()) e.phone = 'Requis'
-    if (!form.type) e.type = "Sélectionnez un type"
+    if (!form.name.trim()) e.name = 'Champ obligatoire'
+    if (!form.phone.trim()) e.phone = 'Champ obligatoire'
+    if (!form.type) e.type = "Sélectionnez un type d'urgence"
     if (!form.location.trim()) e.location = 'Indiquez votre position'
     return e
   }
@@ -35,11 +35,16 @@ export default function Emergency() {
     setErrors((er) => ({ ...er, [e.target.name]: undefined }))
   }
 
+  const selectType = (id) => {
+    setForm((f) => ({ ...f, type: id }))
+    setErrors((er) => ({ ...er, type: undefined }))
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
     const errs = validate()
-    if (Object.keys(errs).length) { setErrors(errs); return }
-    const typeLabel = TYPES.find((t) => t.id === form.type)?.label || form.type
+    if (Object.keys(errs).length > 0) { setErrors(errs); return }
+    const typeLabel = EMERGENCY_TYPES.find((t) => t.id === form.type)?.label || form.type
     setLoading(true)
     setTimeout(() => {
       sendRequest(`🚨 URGENCE — ${typeLabel}`, {
@@ -47,110 +52,139 @@ export default function Emergency() {
         "Type d'urgence": typeLabel, 'Localisation': form.location,
         'Véhicule': form.vehicle, 'Notes': form.notes,
       })
-      setLoading(false); setSent(true)
+      setLoading(false)
+      setSent(true)
     }, 800)
   }
 
-  const labelStyle = { fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#444', display: 'block', marginBottom: 6 }
-  const errStyle = { fontSize: 11, color: '#FF3B3B', marginTop: 4 }
-
   return (
-    <section id="urgence" style={{ background: '#030303', padding: '100px 0', borderTop: '1px solid #111' }}>
-      <div style={{ maxWidth: 760, margin: '0 auto', padding: '0 24px' }}>
+    <section
+      id="urgence"
+      className="py-24 relative overflow-hidden"
+      style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.12) 0%, #060e1a 60%), #060e1a' }}
+    >
+      <div
+        className="absolute inset-0 pointer-events-none glow-pulse"
+        style={{ background: 'radial-gradient(ellipse at 50% -20%, rgba(239,68,68,0.1) 0%, transparent 60%)' }}
+      />
 
-        <div className="reveal" style={{ marginBottom: 56 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#FF3B3B', marginBottom: 16 }}>
-            <span className="blink" style={{ width: 6, height: 6, borderRadius: '50%', background: '#FF3B3B' }} />
-            Assistance urgente · 24h/24
+      <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-12 reveal">
+          <div
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-red-300 border border-red-500/30 px-4 py-2 rounded-full mb-5"
+            style={{ background: 'rgba(239,68,68,0.1)' }}
+          >
+            <span className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse" />
+            Assistance urgente — 24h/24
           </div>
-          <h2 style={{ fontFamily: 'Sora', fontWeight: 900, fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+          <h2 className="font-display font-black text-white text-3xl sm:text-4xl mb-3 tracking-tight">
             Besoin d'aide immédiate ?
           </h2>
-          <p style={{ color: '#555', fontSize: 14, marginTop: 12 }}>
-            Signalez votre situation. Notre réseau vous met en contact avec l'assistance la plus proche.
+          <div className="section-divider" style={{ background: 'linear-gradient(90deg, transparent, rgba(239,68,68,0.7), transparent)' }} />
+          <p className="text-slate-400 text-base max-w-lg mx-auto">
+            Signalez votre situation, notre équipe vous met en contact avec l'assistance
+            la plus proche dès que possible.
           </p>
         </div>
 
         {sent ? (
-          <div className="reveal toast" style={{ background: '#080808', border: '1px solid #111', borderTop: '2px solid #22c55e', padding: '60px 40px', textAlign: 'center' }}>
-            <CheckCircle style={{ width: 40, height: 40, color: '#22c55e', margin: '0 auto 16px' }} />
-            <h3 style={{ fontFamily: 'Sora', fontWeight: 800, fontSize: 20, color: '#fff', marginBottom: 8 }}>Demande transmise</h3>
-            <p style={{ color: '#555', fontSize: 13, marginBottom: 24 }}>Restez en sécurité. Nous vous contactons rapidement.</p>
-            <button onClick={() => { setSent(false); setForm(INITIAL) }} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#FF3B3B', color: '#fff', fontWeight: 700, fontSize: 13, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '13px 28px', borderRadius: 2, border: 'none', cursor: 'pointer' }}>
+          <div
+            className="reveal rounded-2xl p-12 text-center toast"
+            style={{ background: 'rgba(34,197,94,0.07)', border: '1px solid rgba(34,197,94,0.2)' }}
+          >
+            <CheckCircle className="w-14 h-14 text-green-400 mx-auto mb-4" />
+            <h3 className="font-display font-bold text-white text-xl mb-2">Demande transmise !</h3>
+            <p className="text-slate-400 text-sm mb-6 max-w-sm mx-auto">
+              Notre équipe a reçu votre demande. Restez en sécurité — nous vous contactons rapidement.
+            </p>
+            <button
+              onClick={() => { setSent(false); setForm(INITIAL) }}
+              className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold px-6 py-3 rounded-xl transition-colors active:scale-95"
+            >
               Nouvelle demande
             </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="reveal" style={{ background: '#080808', border: '1px solid #1A1A1A', borderTop: '2px solid #FF3B3B' }}>
-            <div style={{ padding: '32px 32px 0' }}>
-
-              {/* Type selector */}
-              <div style={{ marginBottom: 28 }}>
-                <label style={{ ...labelStyle, color: '#FF3B3B66' }}>Type d'urgence *</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1 }} className="em-grid">
-                  <style>{`@media(max-width:500px){.em-grid{grid-template-columns:repeat(2,1fr)!important}}`}</style>
-                  {TYPES.map(({ id, label, icon: Icon }) => (
-                    <button key={id} type="button" onClick={() => { setForm(f => ({ ...f, type: id })); setErrors(er => ({ ...er, type: undefined })) }}
-                      style={{
-                        background: form.type === id ? '#FF3B3B' : '#050505',
-                        border: `1px solid ${form.type === id ? '#FF3B3B' : '#1A1A1A'}`,
-                        color: form.type === id ? '#fff' : '#555',
-                        padding: '14px 8px', cursor: 'pointer', borderRadius: 0,
-                        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-                        fontSize: 11, fontWeight: 700, letterSpacing: '0.04em',
-                        transition: 'all 0.15s',
-                      }}
-                      onMouseEnter={(e) => { if (form.type !== id) e.currentTarget.style.borderColor = '#333' }}
-                      onMouseLeave={(e) => { if (form.type !== id) e.currentTarget.style.borderColor = '#1A1A1A' }}
-                    >
-                      <Icon style={{ width: 16, height: 16 }} />
-                      {label}
-                    </button>
-                  ))}
-                </div>
-                {errors.type && <div style={errStyle}>{errors.type}</div>}
+          <form
+            onSubmit={handleSubmit}
+            className="reveal rounded-2xl p-6 md:p-8"
+            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(239,68,68,0.15)' }}
+          >
+            {/* Emergency type */}
+            <div className="mb-6">
+              <label className="block text-xs font-bold uppercase tracking-widest text-red-400/80 mb-3">
+                Type d'urgence <span className="text-red-400">*</span>
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {EMERGENCY_TYPES.map(({ id, label, icon: Icon }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => selectType(id)}
+                    className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all text-xs font-semibold active:scale-95 ${
+                      form.type === id
+                        ? 'bg-red-600 border-red-500 text-white shadow-lg shadow-red-900/50'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                    }`}
+                    style={form.type !== id ? { background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.08)' } : {}}
+                  >
+                    <Icon className="w-5 h-5" />
+                    {label}
+                  </button>
+                ))}
               </div>
+              {errors.type && <p className="text-red-400 text-xs mt-2">{errors.type}</p>}
+            </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }} className="form-2col">
-                <style>{`@media(max-width:600px){.form-2col{grid-template-columns:1fr!important}}`}</style>
-                <div>
-                  <label style={labelStyle}>Nom *</label>
-                  <input name="name" value={form.name} onChange={handleChange} className="form-input" placeholder="Votre nom" style={errors.name ? { borderColor: '#FF3B3B' } : {}} />
-                  {errors.name && <div style={errStyle}>{errors.name}</div>}
-                </div>
-                <div>
-                  <label style={labelStyle}>Téléphone *</label>
-                  <input name="phone" type="tel" value={form.phone} onChange={handleChange} className="form-input" placeholder="+253 77 …" style={errors.phone ? { borderColor: '#FF3B3B' } : {}} />
-                  {errors.phone && <div style={errStyle}>{errors.phone}</div>}
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="form-label">Nom <span className="text-red-400">*</span></label>
+                <input name="name" value={form.name} onChange={handleChange}
+                  className={`form-input ${errors.name ? '!border-red-500/60' : ''}`}
+                  placeholder="Votre nom" />
+                {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
               </div>
-
-              <div style={{ marginBottom: 20 }}>
-                <label style={labelStyle}>Votre position *</label>
-                <input name="location" value={form.location} onChange={handleChange} className="form-input" placeholder="Quartier, rue, point de repère…" style={errors.location ? { borderColor: '#FF3B3B' } : {}} />
-                {errors.location && <div style={errStyle}>{errors.location}</div>}
-              </div>
-
-              <div style={{ marginBottom: 20 }}>
-                <label style={labelStyle}>Véhicule</label>
-                <input name="vehicle" value={form.vehicle} onChange={handleChange} className="form-input" placeholder="Ex : Toyota Hilux 2019" />
-              </div>
-
-              <div style={{ marginBottom: 28 }}>
-                <label style={labelStyle}>Informations supplémentaires</label>
-                <textarea name="notes" value={form.notes} onChange={handleChange} rows={3} className="form-input" style={{ resize: 'none' }} placeholder="Décrivez la situation…" />
+              <div>
+                <label className="form-label">Téléphone <span className="text-red-400">*</span></label>
+                <input name="phone" type="tel" value={form.phone} onChange={handleChange}
+                  className={`form-input ${errors.phone ? '!border-red-500/60' : ''}`}
+                  placeholder="+253 77 …" />
+                {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone}</p>}
               </div>
             </div>
 
-            <div style={{ borderTop: '1px solid #111', padding: '20px 32px' }}>
-              <button type="submit" disabled={loading}
-                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#FF3B3B', color: '#fff', fontWeight: 800, fontSize: 13, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '15px', borderRadius: 2, border: 'none', cursor: 'pointer', opacity: loading ? 0.6 : 1, transition: 'background 0.15s' }}
-                onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = '#e02020' }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = '#FF3B3B' }}
-              >
-                {loading ? <><Loader style={{ width: 16, height: 16, animation: 'spin 1s linear infinite' }} />Envoi…</> : <><AlertTriangle style={{ width: 15, height: 15 }} />Contacter l'assistance</>}
-              </button>
+            <div className="mb-4">
+              <label className="form-label">Votre position <span className="text-red-400">*</span></label>
+              <input name="location" value={form.location} onChange={handleChange}
+                className={`form-input ${errors.location ? '!border-red-500/60' : ''}`}
+                placeholder="Quartier, rue, point de repère…" />
+              {errors.location && <p className="text-red-400 text-xs mt-1">{errors.location}</p>}
             </div>
+
+            <div className="mb-4">
+              <label className="form-label">Véhicule</label>
+              <input name="vehicle" value={form.vehicle} onChange={handleChange}
+                className="form-input" placeholder="Ex : Toyota Hilux 2019" />
+            </div>
+
+            <div className="mb-6">
+              <label className="form-label">Informations supplémentaires</label>
+              <textarea name="notes" value={form.notes} onChange={handleChange} rows={3}
+                className="form-input resize-none" placeholder="Décrivez la situation en détail…" />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 text-white font-black py-4 rounded-xl transition-all duration-200 active:scale-95 disabled:opacity-60 text-base"
+              style={{ background: 'linear-gradient(135deg, #dc2626, #b91c1c)', boxShadow: '0 4px 24px rgba(220,38,38,0.4)' }}
+            >
+              {loading ? (
+                <><Loader className="w-5 h-5 animate-spin" />Envoi en cours…</>
+              ) : (
+                <><AlertTriangle className="w-5 h-5" />Contacter l'assistance</>
+              )}
+            </button>
           </form>
         )}
       </div>

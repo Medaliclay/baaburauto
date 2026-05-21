@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Menu, X, Car, Phone, AlertTriangle, Wrench, Sparkles, Building2 } from 'lucide-react'
+import { Menu, X, Car, Phone, AlertTriangle, Wrench, MessageCircle, Sparkles } from 'lucide-react'
 import { CONTACT_CONFIG } from '../config'
 
 const NAV_LINKS = [
@@ -13,11 +13,11 @@ const NAV_LINKS = [
 ]
 
 const BOTTOM_ACTIONS = [
-  { icon: AlertTriangle, label: 'Urgence', href: '#urgence', color: '#FF3B3B' },
-  { icon: Wrench, label: 'Pièces', href: '#pieces', color: '#0084FF' },
-  { icon: Car, label: 'Véhicules', href: '#location-achat', color: '#888' },
-  { icon: Sparkles, label: 'Nettoyage', href: '#nettoyage', color: '#888' },
-  { icon: Building2, label: 'Ateliers', href: '#ateliers', color: '#888' },
+  { icon: AlertTriangle, label: 'Urgence', href: '#urgence', color: 'text-red-400' },
+  { icon: Wrench, label: 'Pièces', href: '#pieces', color: 'text-amber-400' },
+  { icon: Car, label: 'Véhicules', href: '#location-achat', color: 'text-blue-400' },
+  { icon: Sparkles, label: 'Nettoyage', href: '#nettoyage', color: 'text-teal-400' },
+  { icon: MessageCircle, label: 'Contact', href: '#contact', color: 'text-purple-400' },
 ]
 
 export default function Navbar() {
@@ -25,147 +25,133 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const h = () => setScrolled(window.scrollY > 40)
-    window.addEventListener('scroll', h, { passive: true })
-    return () => window.removeEventListener('scroll', h)
+    const handleScroll = () => setScrolled(window.scrollY > 30)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const go = (href) => {
+  const handleNavClick = (href) => {
     setOpen(false)
-    setTimeout(() => document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' }), 50)
+    setTimeout(() => {
+      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 50)
   }
 
   return (
     <>
       <header
-        style={{
-          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-          background: scrolled ? 'rgba(0,0,0,0.96)' : 'transparent',
-          borderBottom: scrolled ? '1px solid #1E1E1E' : '1px solid transparent',
-          backdropFilter: scrolled ? 'blur(12px)' : 'none',
-          transition: 'all 0.3s ease',
-        }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? 'bg-[#06111f]/92 backdrop-blur-2xl border-b border-white/[0.06] shadow-2xl shadow-black/40'
+            : 'bg-transparent'
+        }`}
       >
-        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 60 }}>
-
-            {/* Logo */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between h-16">
             <a
               href="#accueil"
-              onClick={(e) => { e.preventDefault(); go('#accueil') }}
-              style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}
+              onClick={(e) => { e.preventDefault(); handleNavClick('#accueil') }}
+              className="flex items-center gap-2.5 group"
             >
-              <div style={{
-                width: 32, height: 32,
-                background: '#0084FF',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                borderRadius: 2,
-              }}>
-                <Car style={{ width: 16, height: 16, color: '#fff' }} />
+              <div
+                className="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center group-hover:bg-amber-400 transition-colors"
+                style={{ boxShadow: '0 4px 16px rgba(245,158,11,0.4)' }}
+              >
+                <Car style={{ width: 17, height: 17, color: '#000' }} />
               </div>
               <div>
-                <div style={{ fontFamily: 'Sora', fontWeight: 900, fontSize: 14, color: '#fff', letterSpacing: '-0.02em' }}>
-                  BAABUR AUTO
+                <div className="font-display font-black text-white text-[15px] leading-none tracking-tight">
+                  Baabur Auto
                 </div>
-                <div style={{ fontSize: 9, color: '#444', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                  Djibouti
+                <div className="text-amber-500/70 text-[10px] leading-tight hidden sm:block font-medium mt-0.5">
+                  Services auto à Djibouti
                 </div>
               </div>
             </a>
 
-            {/* Desktop nav */}
-            <nav style={{ display: 'none', alignItems: 'center', gap: 2 }} className="lg-nav">
-              <style>{`@media(min-width:1024px){.lg-nav{display:flex!important}}`}</style>
-              {NAV_LINKS.map((l) => (
-                <button key={l.href} onClick={() => go(l.href)}
-                  style={{ background: 'none', border: 'none', color: '#666', fontSize: 13, fontWeight: 600, padding: '8px 14px', cursor: 'pointer', letterSpacing: '0.01em', transition: 'color 0.15s' }}
-                  onMouseEnter={(e) => e.target.style.color = '#fff'}
-                  onMouseLeave={(e) => e.target.style.color = '#666'}
+            <nav className="hidden lg:flex items-center gap-0.5">
+              {NAV_LINKS.map((link) => (
+                <button
+                  key={link.href}
+                  onClick={() => handleNavClick(link.href)}
+                  className="text-slate-400 hover:text-white text-sm px-3.5 py-2 rounded-lg hover:bg-white/5 transition-all duration-150 font-medium"
                 >
-                  {l.label}
+                  {link.label}
                 </button>
               ))}
             </nav>
 
-            {/* Right */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <a href={`tel:${CONTACT_CONFIG.phone}`}
-                style={{ display: 'none', alignItems: 'center', gap: 6, color: '#666', fontSize: 13, fontWeight: 600, textDecoration: 'none', transition: 'color 0.15s' }}
-                className="md-phone"
-                onMouseEnter={(e) => { e.currentTarget.style.color = '#fff' }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = '#666' }}
+            <div className="flex items-center gap-3">
+              <a
+                href={`tel:${CONTACT_CONFIG.phone}`}
+                className="hidden md:flex items-center gap-1.5 text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors"
               >
-                <style>{`@media(min-width:768px){.md-phone{display:flex!important}}`}</style>
-                <Phone style={{ width: 13, height: 13 }} />
-                {CONTACT_CONFIG.phone}
+                <Phone className="w-3.5 h-3.5" />
+                <span>{CONTACT_CONFIG.phone}</span>
               </a>
 
-              <button onClick={() => go('#urgence')}
-                className="btn-primary sm-show"
-                style={{ display: 'none', fontSize: 11, padding: '9px 18px' }}
+              <button
+                onClick={() => handleNavClick('#urgence')}
+                className="hidden sm:flex btn-primary text-xs px-4 py-2"
               >
-                <style>{`@media(min-width:640px){.sm-show{display:inline-flex!important}}`}</style>
-                <AlertTriangle style={{ width: 13, height: 13 }} />
+                <AlertTriangle className="w-3.5 h-3.5" />
                 Urgence
               </button>
 
-              <button onClick={() => setOpen(!open)}
-                style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', padding: 6, display: 'flex' }}
-                className="lg-hide"
+              <button
+                onClick={() => setOpen(!open)}
+                className="lg:hidden text-slate-400 hover:text-white p-2 hover:bg-white/5 rounded-lg transition-colors"
+                aria-label="Menu"
               >
-                <style>{`@media(min-width:1024px){.lg-hide{display:none!important}}`}</style>
-                {open ? <X style={{ width: 20, height: 20 }} /> : <Menu style={{ width: 20, height: 20 }} />}
+                {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
             </div>
           </div>
         </div>
 
-        {/* Mobile menu */}
         {open && (
-          <div className="menu-slide" style={{
-            background: 'rgba(0,0,0,0.98)', borderTop: '1px solid #1E1E1E',
-          }}>
-            <div style={{ maxWidth: 1280, margin: '0 auto', padding: '16px 24px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, marginBottom: 16 }}>
-                {NAV_LINKS.map((l) => (
-                  <button key={l.href} onClick={() => go(l.href)}
-                    style={{ background: 'none', border: 'none', color: '#888', fontSize: 13, fontWeight: 600, padding: '12px 16px', cursor: 'pointer', textAlign: 'left', letterSpacing: '0.01em', transition: 'color 0.15s' }}
-                    onMouseEnter={(e) => e.target.style.color = '#fff'}
-                    onMouseLeave={(e) => e.target.style.color = '#888'}
-                  >
-                    {l.label}
-                  </button>
-                ))}
-              </div>
-              <div style={{ borderTop: '1px solid #1E1E1E', paddingTop: 12 }}>
-                <a href={`tel:${CONTACT_CONFIG.phone}`}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#0084FF', fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
-                  <Phone style={{ width: 14, height: 14 }} />
-                  {CONTACT_CONFIG.phone}
-                </a>
-              </div>
+          <div className="lg:hidden menu-slide bg-[#06111f]/98 backdrop-blur-2xl border-t border-white/[0.06]">
+            <nav className="max-w-7xl mx-auto px-4 py-4 grid grid-cols-2 gap-1">
+              {NAV_LINKS.map((link) => (
+                <button
+                  key={link.href}
+                  onClick={() => handleNavClick(link.href)}
+                  className="text-slate-300 hover:text-amber-400 font-medium text-sm px-4 py-3 rounded-xl hover:bg-white/5 transition-all text-left"
+                >
+                  {link.label}
+                </button>
+              ))}
+            </nav>
+            <div className="px-4 pb-4 pt-1 border-t border-white/[0.06] mx-4">
+              <a
+                href={`tel:${CONTACT_CONFIG.phone}`}
+                className="flex items-center gap-2 text-amber-400 font-bold text-sm py-2"
+              >
+                <Phone className="w-4 h-4" />
+                {CONTACT_CONFIG.phone}
+              </a>
             </div>
           </div>
         )}
       </header>
 
-      {/* Mobile bottom bar */}
+      {/* Mobile sticky bottom bar */}
       <div
-        className="lg-hide"
-        style={{
-          position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50,
-          background: 'rgba(0,0,0,0.97)', borderTop: '1px solid #1E1E1E',
-          display: 'grid', gridTemplateColumns: 'repeat(5,1fr)',
-          paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
-        }}
+        className="fixed bottom-0 left-0 right-0 z-50 lg:hidden border-t border-white/[0.07]"
+        style={{ background: 'rgba(6,17,31,0.95)', backdropFilter: 'blur(24px)' }}
       >
-        {BOTTOM_ACTIONS.map(({ icon: Icon, label, href, color }) => (
-          <button key={href} onClick={() => go(href)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: '10px 4px' }}>
-            <Icon style={{ width: 18, height: 18, color }} />
-            <span style={{ fontSize: 9, color: '#444', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{label}</span>
-          </button>
-        ))}
+        <div className="grid grid-cols-5 px-1 py-1.5 pb-safe" style={{ paddingBottom: 'max(6px, env(safe-area-inset-bottom))' }}>
+          {BOTTOM_ACTIONS.map(({ icon: Icon, label, href, color }) => (
+            <button
+              key={href}
+              onClick={() => handleNavClick(href)}
+              className="flex flex-col items-center gap-1 py-2 px-1 rounded-xl hover:bg-white/5 transition-colors active:scale-95"
+            >
+              <Icon className={`w-5 h-5 ${color}`} />
+              <span className="text-[9px] text-slate-500 font-semibold uppercase tracking-wide">{label}</span>
+            </button>
+          ))}
+        </div>
       </div>
     </>
   )

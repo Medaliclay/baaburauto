@@ -1,121 +1,160 @@
-import { Car, Wrench, AlertTriangle, Sparkles, Building2, ArrowRight } from 'lucide-react'
+import { Car, Wrench, AlertTriangle, Sparkles, Building2, ChevronRight } from 'lucide-react'
 
 const SERVICES = [
   {
-    num: '01', icon: AlertTriangle, title: 'Urgence',
-    desc: 'Remorquage, batterie, pneu crevé, panne mécanique — intervention rapide.',
-    href: '#urgence', cta: "Assistance immédiate", accent: '#FF3B3B', featured: true,
-    tag: 'DISPONIBLE 24H/24',
+    icon: AlertTriangle,
+    title: 'Urgence',
+    desc: 'Remorquage, batterie, pneu crevé, panne mécanique — notre réseau intervient le plus vite possible.',
+    href: '#urgence',
+    cta: "Demander de l'aide",
+    accent: '#ef4444',
+    glow: 'rgba(239,68,68,0.15)',
+    tag: '🚨 Disponible 24h/24',
+    featured: true,
   },
   {
-    num: '02', icon: Car, title: 'Location & Achat',
-    desc: 'Location courte/longue durée ou achat direct avec nos partenaires fiables.',
-    href: '#location-achat', cta: 'Voir les véhicules', accent: '#0084FF',
+    icon: Car,
+    title: 'Location / Achat',
+    desc: 'Trouvez le véhicule idéal — location courte durée, longue durée ou achat direct.',
+    href: '#location-achat',
+    cta: 'Voir les véhicules',
+    accent: '#3b82f6',
+    glow: 'rgba(59,130,246,0.12)',
+    tag: null,
+    featured: false,
   },
   {
-    num: '03', icon: Wrench, title: 'Pièces détachées',
-    desc: 'Pièces neuves, occasion ou origine — livrées rapidement auprès de nos fournisseurs.',
-    href: '#pieces', cta: 'Demander une pièce', accent: '#0084FF',
+    icon: Wrench,
+    title: 'Pièces détachées',
+    desc: 'Commandez des pièces neuves, d\'occasion ou d\'origine pour votre véhicule rapidement.',
+    href: '#pieces',
+    cta: 'Demander une pièce',
+    accent: '#f59e0b',
+    glow: 'rgba(245,158,11,0.12)',
+    tag: null,
+    featured: false,
   },
   {
-    num: '04', icon: Sparkles, title: 'Nettoyage',
-    desc: 'Lavage, nettoyage intérieur, detailing complet — à l\'atelier ou à domicile.',
-    href: '#nettoyage', cta: 'Réserver', accent: '#0084FF',
+    icon: Sparkles,
+    title: 'Nettoyage',
+    desc: 'Lavage, nettoyage intérieur, detailing complet ou polissage — à l\'atelier ou à domicile.',
+    href: '#nettoyage',
+    cta: 'Réserver un lavage',
+    accent: '#14b8a6',
+    glow: 'rgba(20,184,166,0.12)',
+    tag: null,
+    featured: false,
   },
   {
-    num: '05', icon: Building2, title: 'Ateliers',
-    desc: 'Vidange, diagnostic, freins, climatisation — ateliers partenaires qualifiés.',
-    href: '#ateliers', cta: 'Trouver un atelier', accent: '#0084FF',
+    icon: Building2,
+    title: 'Ateliers & Maintenance',
+    desc: 'Vidange, diagnostic, freins, climatisation — ateliers partenaires qualifiés à Djibouti.',
+    href: '#ateliers',
+    cta: 'Trouver un atelier',
+    accent: '#a855f7',
+    glow: 'rgba(168,85,247,0.12)',
+    tag: null,
+    featured: false,
   },
 ]
 
-export default function Services() {
-  const go = (href) => document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+function ServiceCard({ service, className = '' }) {
+  const scrollTo = (href) => document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+  const Icon = service.icon
+
+  if (service.featured) {
+    return (
+      <div
+        className={`card-hover relative overflow-hidden rounded-2xl p-7 flex flex-col justify-between cursor-pointer group ${className}`}
+        style={{
+          background: `radial-gradient(ellipse at top left, ${service.glow} 0%, rgba(255,255,255,0.03) 60%)`,
+          border: `1px solid rgba(239,68,68,0.2)`,
+          minHeight: '240px',
+        }}
+        onClick={() => scrollTo(service.href)}
+      >
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: `radial-gradient(ellipse at 20% 20%, ${service.glow} 0%, transparent 65%)` }}
+        />
+        <div className="relative z-10">
+          {service.tag && (
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-red-300 border border-red-500/30 px-3 py-1 rounded-full mb-5"
+              style={{ background: 'rgba(239,68,68,0.1)' }}>
+              <span className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse" />
+              {service.tag}
+            </div>
+          )}
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+            style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.25)' }}
+          >
+            <Icon className="w-6 h-6" style={{ color: service.accent }} />
+          </div>
+          <h3 className="font-display font-bold text-white text-xl mb-2">{service.title}</h3>
+          <p className="text-slate-400 text-sm leading-relaxed mb-6">{service.desc}</p>
+        </div>
+        <div
+          className="relative z-10 inline-flex items-center gap-2 text-sm font-bold group-hover:gap-3 transition-all"
+          style={{ color: service.accent }}
+        >
+          {service.cta}
+          <ChevronRight className="w-4 h-4" />
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <section id="services" style={{ background: '#000', padding: '100px 0', borderTop: '1px solid #111' }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+    <div
+      className={`card-hover relative overflow-hidden rounded-2xl p-6 flex flex-col cursor-pointer group ${className}`}
+      style={{
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid rgba(255,255,255,0.07)',
+      }}
+      onClick={() => scrollTo(service.href)}
+    >
+      <div
+        className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 shrink-0"
+        style={{ background: service.glow, border: `1px solid ${service.accent}30` }}
+      >
+        <Icon className="w-5 h-5" style={{ color: service.accent }} />
+      </div>
+      <h3 className="font-display font-bold text-white text-base mb-2">{service.title}</h3>
+      <p className="text-slate-500 text-sm leading-relaxed mb-4 flex-1">{service.desc}</p>
+      <div
+        className="inline-flex items-center gap-1.5 text-xs font-bold group-hover:gap-2.5 transition-all"
+        style={{ color: service.accent }}
+      >
+        {service.cta}
+        <ChevronRight className="w-3.5 h-3.5" />
+      </div>
+    </div>
+  )
+}
 
-        {/* Header */}
-        <div className="reveal" style={{ marginBottom: 64 }}>
-          <span className="section-tag">Services</span>
-          <h2 style={{ fontFamily: 'Sora', fontWeight: 900, fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 0 }}>
+export default function Services() {
+  return (
+    <section id="services" className="py-24" style={{ background: '#08131e' }}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-14 reveal">
+          <span className="section-tag">Nos services</span>
+          <h2 className="font-display font-black text-white text-3xl sm:text-4xl mb-3 tracking-tight">
             Tout ce dont vous avez besoin
           </h2>
+          <div className="section-divider" />
+          <p className="text-slate-400 text-base max-w-xl mx-auto">
+            Baabur Auto regroupe l'ensemble des services automobiles disponibles à Djibouti.
+          </p>
         </div>
 
-        {/* Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1 }} className="services-grid">
-          <style>{`
-            @media(max-width:768px){.services-grid{grid-template-columns:1fr!important}}
-            @media(min-width:769px) and (max-width:1023px){.services-grid{grid-template-columns:repeat(2,1fr)!important}}
-          `}</style>
-
-          {SERVICES.map((s, i) => {
-            const Icon = s.icon
-            return (
-              <div
-                key={s.num}
-                className="reveal"
-                onClick={() => go(s.href)}
-                style={{
-                  background: s.featured ? '#080808' : '#050505',
-                  border: s.featured ? `1px solid ${s.accent}30` : '1px solid #111',
-                  borderTop: `2px solid ${s.accent}`,
-                  padding: '32px 28px',
-                  cursor: 'pointer',
-                  transition: 'background 0.2s, border-color 0.2s',
-                  transitionDelay: `${i * 60}ms`,
-                  position: 'relative',
-                  gridColumn: s.featured && i === 0 ? 'span 1' : 'auto',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#0A0A0A'
-                  e.currentTarget.style.borderColor = s.accent
-                  e.currentTarget.style.borderTopColor = s.accent
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = s.featured ? '#080808' : '#050505'
-                  e.currentTarget.style.borderColor = s.featured ? `${s.accent}30` : '#111'
-                  e.currentTarget.style.borderTopColor = s.accent
-                }}
-              >
-                {s.tag && (
-                  <div style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 6,
-                    fontSize: 9, fontWeight: 700, letterSpacing: '0.14em',
-                    textTransform: 'uppercase', color: s.accent,
-                    marginBottom: 20,
-                  }}>
-                    <span className="blink" style={{ width: 5, height: 5, borderRadius: '50%', background: s.accent }} />
-                    {s.tag}
-                  </div>
-                )}
-
-                <div style={{
-                  width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: `${s.accent}12`, border: `1px solid ${s.accent}25`,
-                  borderRadius: 2, marginBottom: 20,
-                }}>
-                  <Icon style={{ width: 18, height: 18, color: s.accent }} />
-                </div>
-
-                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: '#333', marginBottom: 8, textTransform: 'uppercase' }}>
-                  {s.num}
-                </div>
-                <h3 style={{ fontFamily: 'Sora', fontWeight: 800, fontSize: 18, color: '#fff', marginBottom: 12, letterSpacing: '-0.01em' }}>
-                  {s.title}
-                </h3>
-                <p style={{ color: '#555', fontSize: 13, lineHeight: 1.65, marginBottom: 24 }}>
-                  {s.desc}
-                </p>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 700, color: s.accent, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-                  {s.cta}
-                  <ArrowRight style={{ width: 13, height: 13 }} />
-                </div>
-              </div>
-            )
-          })}
+        {/* Bento grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 reveal">
+          <ServiceCard service={SERVICES[0]} className="sm:col-span-2 lg:col-span-2 lg:row-span-1" />
+          <ServiceCard service={SERVICES[1]} />
+          <ServiceCard service={SERVICES[2]} />
+          <ServiceCard service={SERVICES[3]} />
+          <ServiceCard service={SERVICES[4]} />
         </div>
       </div>
     </section>

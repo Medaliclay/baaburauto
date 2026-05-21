@@ -1,82 +1,124 @@
-import { Fuel, Settings, MapPin, Tag, ArrowRight } from 'lucide-react'
+import { Fuel, Settings, MapPin, Tag, Send } from 'lucide-react'
 import { sendRequest } from '../config'
 
 const VEHICLES = [
-  { brand: 'Toyota', model: 'Land Cruiser 200', year: 2019, type: 'VENTE', price: '9 500 000', currency: 'DJF', fuel: 'Diesel', transmission: 'Auto', location: 'Djibouti-Ville', badge: 'Populaire' },
-  { brand: 'Nissan', model: 'Patrol Y62', year: 2020, type: 'VENTE', price: '11 200 000', currency: 'DJF', fuel: 'Essence', transmission: 'Auto', location: 'Balbala', badge: 'Récent' },
-  { brand: 'Toyota', model: 'Hilux Double Cab', year: 2021, type: 'LOCATION', price: '45 000', currency: 'DJF/mois', fuel: 'Diesel', transmission: 'Manuel', location: 'Djibouti-Ville', badge: 'Dispo' },
-  { brand: 'Hyundai', model: 'Tucson', year: 2018, type: 'VENTE', price: '5 800 000', currency: 'DJF', fuel: 'Essence', transmission: 'Auto', location: 'Djibouti-Ville', badge: null },
-  { brand: 'Mitsubishi', model: 'L200 Pickup', year: 2020, type: 'LOCATION', price: '35 000', currency: 'DJF/mois', fuel: 'Diesel', transmission: 'Manuel', location: 'PK12', badge: 'Dispo' },
-  { brand: 'Kia', model: 'Sportage', year: 2022, type: 'VENTE', price: '7 200 000', currency: 'DJF', fuel: 'Essence', transmission: 'Auto', location: 'Djibouti-Ville', badge: 'Nouveau' },
+  {
+    brand: 'Toyota', model: 'Land Cruiser 200', year: 2019, type: 'Vente',
+    price: '9 500 000', currency: 'DJF', fuel: 'Diesel', transmission: 'Automatique',
+    location: 'Djibouti-Ville', badge: 'Populaire', badgeColor: '#f59e0b',
+  },
+  {
+    brand: 'Nissan', model: 'Patrol Y62', year: 2020, type: 'Vente',
+    price: '11 200 000', currency: 'DJF', fuel: 'Essence', transmission: 'Automatique',
+    location: 'Balbala', badge: 'Récent', badgeColor: '#3b82f6',
+  },
+  {
+    brand: 'Toyota', model: 'Hilux Double Cab', year: 2021, type: 'Location',
+    price: '45 000', currency: 'DJF/mois', fuel: 'Diesel', transmission: 'Manuelle',
+    location: 'Djibouti-Ville', badge: 'Disponible', badgeColor: '#22c55e',
+  },
+  {
+    brand: 'Hyundai', model: 'Tucson', year: 2018, type: 'Vente',
+    price: '5 800 000', currency: 'DJF', fuel: 'Essence', transmission: 'Automatique',
+    location: 'Djibouti-Ville', badge: null, badgeColor: '',
+  },
+  {
+    brand: 'Mitsubishi', model: 'L200 Pickup', year: 2020, type: 'Location',
+    price: '35 000', currency: 'DJF/mois', fuel: 'Diesel', transmission: 'Manuelle',
+    location: 'PK12', badge: 'Disponible', badgeColor: '#22c55e',
+  },
+  {
+    brand: 'Kia', model: 'Sportage', year: 2022, type: 'Vente',
+    price: '7 200 000', currency: 'DJF', fuel: 'Essence', transmission: 'Automatique',
+    location: 'Djibouti-Ville', badge: 'Nouveau', badgeColor: '#a855f7',
+  },
 ]
 
-function VehicleCard({ v }) {
-  const req = () => sendRequest(`Demande — ${v.brand} ${v.model}`, {
-    'Type': v.type, 'Véhicule': `${v.brand} ${v.model} (${v.year})`,
-    'Prix': `${v.price} ${v.currency}`, 'Carburant': v.fuel,
-    'Transmission': v.transmission, 'Localisation': v.location,
-  })
+function VehicleCard({ vehicle }) {
+  const handleRequest = () => {
+    sendRequest(`Demande de véhicule — ${vehicle.brand} ${vehicle.model}`, {
+      'Type': vehicle.type,
+      'Véhicule': `${vehicle.brand} ${vehicle.model} (${vehicle.year})`,
+      'Prix': `${vehicle.price} ${vehicle.currency}`,
+      'Carburant': vehicle.fuel,
+      'Transmission': vehicle.transmission,
+      'Localisation': vehicle.location,
+    })
+  }
+
+  const isLocation = vehicle.type === 'Location'
 
   return (
-    <div className="reveal card-hover" style={{
-      background: '#080808', border: '1px solid #1A1A1A',
-      borderTop: '2px solid #0084FF',
-    }}>
-      {/* Placeholder */}
-      <div style={{
-        height: 160, background: '#0A0A0A',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        borderBottom: '1px solid #111', position: 'relative',
-      }}>
-        <span style={{ fontSize: 40 }}>🚗</span>
-        {v.badge && (
-          <span style={{
-            position: 'absolute', top: 12, left: 12,
-            background: '#0084FF', color: '#fff',
-            fontSize: 9, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase',
-            padding: '4px 8px', borderRadius: 1,
-          }}>{v.badge}</span>
+    <div
+      className="reveal card-hover rounded-2xl overflow-hidden flex flex-col"
+      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
+    >
+      {/* Image placeholder */}
+      <div
+        className="relative h-44 flex items-center justify-center"
+        style={{ background: 'linear-gradient(135deg, #0a1a2e 0%, #06111f 100%)' }}
+      >
+        <div className="text-center opacity-60">
+          <div className="text-5xl mb-1">🚗</div>
+          <div className="text-slate-600 text-xs">Photo bientôt disponible</div>
+        </div>
+        {vehicle.badge && (
+          <span
+            className="absolute top-3 left-3 text-white text-xs font-bold px-2.5 py-1 rounded-full"
+            style={{ background: vehicle.badgeColor, boxShadow: `0 2px 8px ${vehicle.badgeColor}50` }}
+          >
+            {vehicle.badge}
+          </span>
         )}
-        <span style={{
-          position: 'absolute', top: 12, right: 12,
-          background: 'transparent', border: '1px solid #222',
-          color: '#555', fontSize: 9, fontWeight: 800, letterSpacing: '0.1em',
-          textTransform: 'uppercase', padding: '4px 8px', borderRadius: 1,
-        }}>{v.type}</span>
+        <span
+          className="absolute top-3 right-3 text-white text-xs font-bold px-2.5 py-1 rounded-full border"
+          style={{
+            background: isLocation ? 'rgba(59,130,246,0.2)' : 'rgba(255,255,255,0.07)',
+            borderColor: isLocation ? 'rgba(59,130,246,0.4)' : 'rgba(255,255,255,0.12)',
+            color: isLocation ? '#93c5fd' : '#94a3b8',
+          }}
+        >
+          {vehicle.type}
+        </span>
       </div>
 
-      <div style={{ padding: '20px 20px 16px' }}>
-        <div style={{ marginBottom: 16 }}>
-          <div style={{ fontFamily: 'Sora', fontWeight: 800, fontSize: 16, color: '#fff', letterSpacing: '-0.01em' }}>
-            {v.brand} {v.model}
-          </div>
-          <div style={{ fontSize: 11, color: '#444', fontWeight: 700, letterSpacing: '0.08em', marginTop: 2 }}>{v.year}</div>
+      <div className="p-5 flex flex-col flex-1">
+        <div className="mb-3">
+          <h3 className="font-display font-bold text-white text-lg leading-tight">
+            {vehicle.brand} {vehicle.model}
+          </h3>
+          <div className="text-slate-600 text-sm font-medium">{vehicle.year}</div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 16 }}>
-          {[
-            { icon: Fuel, val: v.fuel },
-            { icon: Settings, val: v.transmission },
-          ].map(({ icon: Icon, val }) => (
-            <div key={val} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#555' }}>
-              <Icon style={{ width: 12, height: 12, color: '#333' }} />{val}
-            </div>
-          ))}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#555', gridColumn: 'span 2' }}>
-            <MapPin style={{ width: 12, height: 12, color: '#333' }} />{v.location}
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          <div className="flex items-center gap-1.5 text-slate-500 text-xs">
+            <Fuel className="w-3.5 h-3.5 text-amber-500" />
+            {vehicle.fuel}
+          </div>
+          <div className="flex items-center gap-1.5 text-slate-500 text-xs">
+            <Settings className="w-3.5 h-3.5 text-amber-500" />
+            {vehicle.transmission}
+          </div>
+          <div className="flex items-center gap-1.5 text-slate-500 text-xs col-span-2">
+            <MapPin className="w-3.5 h-3.5 text-amber-500" />
+            {vehicle.location}
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid #111', paddingTop: 14 }}>
+        <div
+          className="flex items-center justify-between pt-4 mt-auto border-t"
+          style={{ borderColor: 'rgba(255,255,255,0.06)' }}
+        >
           <div>
-            <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#444', marginBottom: 3 }}>Prix</div>
-            <div style={{ fontFamily: 'Sora', fontWeight: 900, fontSize: 15, color: '#fff', letterSpacing: '-0.01em' }}>
-              {v.price} <span style={{ color: '#0084FF', fontSize: 10 }}>{v.currency}</span>
+            <div className="text-xs text-slate-600 uppercase tracking-wide font-semibold mb-0.5">Prix</div>
+            <div className="font-display font-black text-white text-base leading-none">
+              {vehicle.price}{' '}
+              <span className="text-amber-400 text-xs font-bold">{vehicle.currency}</span>
             </div>
           </div>
-          <button onClick={req} className="btn-primary" style={{ fontSize: 11, padding: '9px 14px' }}>
+          <button onClick={handleRequest} className="btn-primary px-3.5 py-2 text-xs">
+            <Send className="w-3.5 h-3.5" />
             Demander
-            <ArrowRight style={{ width: 12, height: 12 }} />
           </button>
         </div>
       </div>
@@ -86,30 +128,37 @@ function VehicleCard({ v }) {
 
 export default function VehicleRental() {
   return (
-    <section id="location-achat" style={{ background: '#030303', padding: '100px 0', borderTop: '1px solid #111' }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
-        <div className="reveal" style={{ marginBottom: 64 }}>
+    <section id="location-achat" className="py-24" style={{ background: '#060e1a' }}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-14 reveal">
           <span className="section-tag">Location & Achat</span>
-          <h2 style={{ fontFamily: 'Sora', fontWeight: 900, fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+          <h2 className="font-display font-black text-white text-3xl sm:text-4xl mb-3 tracking-tight">
             Véhicules disponibles
           </h2>
-          <p style={{ color: '#555', fontSize: 14, marginTop: 12, maxWidth: 500 }}>
-            Exemples proposés par nos partenaires. Envoyez une demande, nous vous recontactons sous peu.
+          <div className="section-divider" />
+          <p className="text-slate-400 text-base max-w-xl mx-auto">
+            Exemples de véhicules proposés par nos partenaires.
+            Envoyez une demande et notre équipe vous contacte sous peu.
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1 }} className="veh-grid">
-          <style>{`@media(max-width:767px){.veh-grid{grid-template-columns:1fr!important}}@media(min-width:768px) and (max-width:1023px){.veh-grid{grid-template-columns:repeat(2,1fr)!important}}`}</style>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {VEHICLES.map((v, i) => (
-            <div key={i} style={{ transitionDelay: `${i * 55}ms` }}><VehicleCard v={v} /></div>
+            <div key={i} style={{ transitionDelay: `${i * 60}ms` }}>
+              <VehicleCard vehicle={v} />
+            </div>
           ))}
         </div>
 
-        <div style={{ marginTop: 32, padding: '20px 24px', background: '#080808', border: '1px solid #1A1A1A', borderLeft: '2px solid #0084FF', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-          <Tag style={{ width: 16, height: 16, color: '#0084FF', flexShrink: 0, marginTop: 1 }} />
-          <p style={{ color: '#555', fontSize: 13, lineHeight: 1.6 }}>
-            <strong style={{ color: '#888' }}>Vous ne trouvez pas ce que vous cherchez ?</strong>{' '}
-            Envoyez-nous votre demande avec les caractéristiques souhaitées, nous rechercherons parmi nos partenaires.
+        <div
+          className="mt-10 rounded-2xl p-5 flex items-start gap-3 reveal"
+          style={{ background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)' }}
+        >
+          <Tag className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+          <p className="text-amber-200/80 text-sm">
+            <strong className="text-amber-300">Vous ne trouvez pas ce que vous cherchez ?</strong>{' '}
+            Envoyez-nous votre demande avec les caractéristiques souhaitées et nous rechercherons
+            parmi nos partenaires disponibles.
           </p>
         </div>
       </div>
