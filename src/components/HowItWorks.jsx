@@ -71,7 +71,7 @@ export default function HowItWorks() {
 
                 <div className="relative z-10 text-center">
                   {/* Number */}
-                  <div className="text-4xl font-display font-extrabold text-white/5 mb-2">
+                  <div className="text-4xl font-display font-extrabold text-white mb-2">
                     {step.num}
                   </div>
 
