@@ -10,6 +10,7 @@ import Workshop from './components/Workshop'
 import HowItWorks from './components/HowItWorks'
 import About from './components/About'
 import Contact from './components/Contact'
+import AppComingSoon from './components/AppComingSoon'
 import Footer from './components/Footer'
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
         <HowItWorks />
         <About />
         <Contact />
+        <AppComingSoon />
       </main>
       <Footer />
     </div>
